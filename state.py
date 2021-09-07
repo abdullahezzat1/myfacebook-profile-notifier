@@ -15,7 +15,7 @@ class State:
     def load():
         if State.loaded == True:
             return True
-        stateFile = open(path.dirname(__file__) + '/state.json')
+        stateFile = open(path.dirname(__file__) + '/state_private.json')
         stateFile = json.load(stateFile)
         State.email = stateFile['email']
         State.password = stateFile['password']
@@ -26,7 +26,7 @@ class State:
         return True
 
     def update():
-        stateFile = open(path.dirname(__file__) + '/state.json', 'w')
+        stateFile = open(path.dirname(__file__) + '/state_private.json', 'w')
         stateFile.write(json.encoder.JSONEncoder().encode({
             "email": State.email,
             "password": State.password,

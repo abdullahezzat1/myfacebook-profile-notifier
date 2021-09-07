@@ -8,8 +8,6 @@ def notify(summary: str, body: str):
         [
             'notify-send',  # notification program name
             '-a', 'Facebook Notifier',  # Sender name...?
-            '-i', path.dirname(__file__) + \
-            '/f_logo_RGB-Hex-Blue_512.png',  # Sender icon
             summary,  # Message summary
             body  # Message body
         ]
