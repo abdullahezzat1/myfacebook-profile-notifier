@@ -9,6 +9,7 @@ import datetime
 import time
 import random
 import notifier
+import traceback
 
 
 def init():
@@ -25,10 +26,16 @@ def get_latest_posts():
     latest_posts = []
     base_url = "https://mbasic.facebook.com"
     for profile_path in State.profiles_paths:
-        print('Processing profile: ' + profile_path)
-        profile_latest_posts = profile.get_latest_posts(
-            base_url+profile_path)
-        latest_posts.extend(profile_latest_posts)
+        try:
+            print('Processing profile: ' + profile_path)
+            profile_latest_posts = profile.get_latest_posts(
+                base_url+profile_path)
+            print(profile_latest_posts)
+            latest_posts.extend(profile_latest_posts)
+        except:
+            notifier.notify(
+                'An Error Occured', traceback.format_exc() + f"\nProfile: {profile_path}")
+            pass
     print('Quitting Client...')
     selenium_objects.client.quit()
     print('Updating State...')
@@ -109,12 +116,18 @@ class profile:
                 pass
 
         # print(latest_posts)
-        if not loop_is_broken:
-            # go to next page and repeat
-            next_page_link_element = selenium_objects.client.find_element_by_partial_link_text(
-                'See More Stories')
-            next_page_link = next_page_link_element.get_attribute('href')
-            latest_posts.extend(profile.get_latest_posts(
-                next_page_link, profile_name))
+        try:
+            if not loop_is_broken:
+                # go to next page and repeat
+                next_page_link_element = selenium_objects.client.find_element_by_partial_link_text(
+                    'See More Stories')
+                next_page_link = next_page_link_element.get_attribute('href')
+                latest_posts.extend(profile.get_latest_posts(
+                    next_page_link, profile_name))
 
-        return latest_posts
+            return latest_posts
+        except NoSuchElementException:
+            pass
+        except:
+            notifier.notify('An Error Occured', traceback.format_exc())
+            pass

@@ -5,7 +5,7 @@ import os
 
 # options
 options = webdriver.ChromeOptions()
-options.add_argument('headless')
+# options.add_argument('headless')
 options.page_load_strategy = 'normal'
 userDataDir = os.path.abspath('./chromium-user-data')
 options.add_argument(f'--user-data-dir={userDataDir}')
